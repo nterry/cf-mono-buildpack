@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+
+require 'yaml'
+
+blueprint_file = File.join ARGV[0], 'blueprint.yml'
+ 
+blueprint = YAML.load_file blueprint_file
+
+version = blueprint['version']
+app = blueprint['app']
+
+if version === 0.1
+  if blueprint['deployment_environments']
+    deployment_environments = blueprint['deployment_environments'] if blueprint['deployment_environments']
+    if deployment_environments['cloudfoundry.com']
+      puts 'C#'
+      exit 0
+    else
+      exit 1
+    end
+  else
+    exit 1
+  end
+end
+
+
