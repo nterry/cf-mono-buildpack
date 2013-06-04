@@ -1,26 +1,28 @@
 #!/usr/bin/env ruby
 
 require 'yaml'
+begin
+  blueprint_file = File.join ARGV[0], 'blueprint.yml'
 
-blueprint_file = File.join ARGV[0], 'blueprint.yml'
- 
-blueprint = YAML.load_file blueprint_file
+  blueprint = YAML.load_file blueprint_file
 
-version = blueprint['version']
-app = blueprint['app']
+  app = blueprint['app']
+  version = blueprint['version']
 
-if version === 0.1
-  if blueprint['deployment_environments']
-    deployment_environments = blueprint['deployment_environments'] if blueprint['deployment_environments']
-    if deployment_environments['cloudfoundry.com']
+
+  if version === 0.1
+    deployment_environments = app['deployment_environments']
+    if deployment_environments['cloudfoundry.com'] && File.exist?(File.join (ARGV[0], 'CROWBAR.sln'))
       puts 'C#'
       exit 0
     else
       exit 1
     end
-  else
-    exit 1
   end
+rescue
+  exit 1
 end
+
+
 
 
