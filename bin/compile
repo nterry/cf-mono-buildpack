@@ -9,6 +9,7 @@ $stdout.sync = true
 
 def fetch_mono
   puts 'Fetching mono from S3...'
+  Dir.mkdir("#{@cache_path}/vendor/mono", 0755) if not Dir.exist?("#{@cache_path}/vendor/mono")
   `wget --directory-prefix=#{@cache_path}/vendor/mono https://s3.amazonaws.com/mono-bin/mono3/mono-3.0.10.tgz`
   $?.success?
 end
