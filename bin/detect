@@ -12,7 +12,7 @@ begin
 
   if version === 0.1
     deployment_environments = app['deployment_environments']
-    if deployment_environments['cloudfoundry.com'] && File.exist?(File.join (ARGV[0], 'CROWBAR.sln'))
+    if deployment_environments['cloudfoundry.com'] && File.exist?(File.join ARGV[0], 'CROWBAR.sln')
       puts 'C#'
       exit 0
     else
