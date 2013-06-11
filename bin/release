@@ -2,13 +2,7 @@
 
 require 'yaml'
 
-f = 'CrowbarDaemon/bin/Release/CrowbarDaemon.exe.config'
-
-prev_text = File.read(f)
-new_text = prev_text.gsub("localhost:8080", "localhost:#{ENV['PORT']}")
-File.open(f, "w") { |file| file.puts new_text } if !(prev_text === new_text)
-
 {
   "config_vars" => {},
-  "default_process_types" => { "web" => "vendor/mono/bin/mono-service CrowbarDaemon/bin/Release/CrowbarDaemon.exe" }
+  "default_process_types" => { "web" => "vendor/mono/bin/mono CrowbarDaemon/bin/Release/CrowbarDaemon.exe --port=$PORT" }
 }.to_yaml
