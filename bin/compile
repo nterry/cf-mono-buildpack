@@ -27,7 +27,7 @@ def correct_prefix
       file = File.stat(f)
       next unless file.file?
       prev_text = File.read(f)
-      new_text = prev_text.gsub("/usr/share", "#{@build_path}/vendor/mono/")
+      new_text = prev_text.gsub("/usr/local", "#{@build_path}/vendor/mono/")
       puts "FIX: #{File.path(f)}" if !(prev_text === new_text)
       File.open(f, "w") { |file| file.puts new_text } if !(prev_text === new_text)
     rescue
