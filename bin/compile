@@ -9,12 +9,12 @@ $stdout.sync = true
 
 def fetch_mono
   puts 'Fetching mono from S3...'
-  `mkdir -p #{@cache_path}/vendor/mono; curl https://s3.amazonaws.com/mono-bin/mono3/mono-3.0.10.tgz -o #{@cache_path}/vendor/mono/mono-3.0.10.tgz`
+  `mkdir -p #{@cache_path}/vendor/mono3; curl https://s3.amazonaws.com/heroku-languagepack-mono/mono3/mono-3.0.10.tgz -o #{@cache_path}/vendor/mono3/mono-3.0.10.tgz`
 end
 
 def unpack_mono
   puts 'Unpacking mono into vendor cache...'
-  console_output = `mkdir -p #{@cache_path}/vendor/mono; cd #{@cache_path}/vendor/mono; tar -zxvf mono-3.0.10.tgz; rm -f mono-3.0.10.tgz; cd -`
+  console_output = `mkdir -p #{@cache_path}/vendor/mono3; cd #{@cache_path}/vendor/mono3; tar -zxvf mono-3.0.10.tgz; rm -f mono-3.0.10.tgz; cd -`
   puts console_output
   $?.success?
 end
@@ -26,33 +26,33 @@ def strip_scm
 end
 
 def correct_prefix
-  puts "Correcting the build prefix from /usr/local to #{@build_path}/vendor/mono/"
-  Dir.glob("#{@cache_path}/vendor/mono/**/*", File::FNM_DOTMATCH) do |f|
-    begin
-      file = File.stat(f)
-      next unless file.file?
-      prev_text = File.read(f)
-      new_text = prev_text.gsub("/usr/local", "#{@build_path}/vendor/mono/")
-      puts "FIX: #{File.path(f)}" if !(prev_text === new_text)
-      File.open(f, "w") { |file| file.puts new_text } if !(prev_text === new_text)
-    rescue
-      next
-    end
-  end
-
+#  puts "Correcting the build prefix from /usr/local to #{@build_path}/vendor/mono/"
+#  Dir.glob("#{@cache_path}/vendor/mono/**/*", File::FNM_DOTMATCH) do |f|
+#    begin
+#      file = File.stat(f)
+#      next unless file.file?
+#      prev_text = File.read(f)
+#      new_text = prev_text.gsub("/usr/local", "#{@build_path}/vendor/mono/")
+#      puts "FIX: #{File.path(f)}" if !(prev_text === new_text)
+#      File.open(f, "w") { |file| file.puts new_text } if !(prev_text === new_text)
+#    rescue
+#      next
+#    end
+#  end
+#
   return true
 end
 
 def prepare_mono
-  puts "Moving cached mono at #{@cache_path}/vendor/mono to vendor build at #{@build_path}/vendor/mono"
-  console_output = `mkdir -p #{@build_path}/vendor; mv #{@cache_path}/vendor/mono #{@build_path}/vendor/`
+  puts "Moving cached mono at #{@cache_path}/vendor/mono3 to vendor build at #{@build_path}/vendor/mono3"
+  console_output = `mkdir -p #{@build_path}/vendor; mv #{@cache_path}/vendor/mono3 #{@build_path}/vendor/`
   puts console_output
   $?.success?
 end
 
 def compile
   puts 'Compiling application'
-  console_output = `cd #{@build_path}; #{@build_path}/vendor/mono/bin/xbuild`
+  console_output = `cd #{@build_path}; #{@build_path}/vendor/mono3/bin/xbuild`
   puts console_output
   $?.success?
 end
