@@ -4,5 +4,5 @@ require 'yaml'
 
 {
   "config_vars" => {},
-  "default_process_types" => { "web" => "vendor/mono/bin/mono CrowbarDaemon/bin/Release/CrowbarDaemon.exe --port=$PORT" }
+  "default_process_types" => { "web" => "vendor/mono/bin/mono-sgen CrowbarDaemon/bin/Release/CrowbarDaemon.exe --port=$PORT" }
 }.to_yaml

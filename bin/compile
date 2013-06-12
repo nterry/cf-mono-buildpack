@@ -10,7 +10,6 @@ $stdout.sync = true
 def fetch_mono
   puts 'Fetching mono from S3...'
   `mkdir -p #{@cache_path}/vendor/mono; curl https://s3.amazonaws.com/mono-bin/mono3/mono-3.0.10.tgz -o #{@cache_path}/vendor/mono/mono-3.0.10.tgz`
-  $?.success?
 end
 
 def unpack_mono
@@ -20,8 +19,14 @@ def unpack_mono
   $?.success?
 end
 
+def strip_scm
+  console_output=`rm -rf #{@build_path}/*.git`
+  puts console_output
+  $?.success?
+end
+
 def correct_prefix
-  puts "Correcting the build prefix from /usr/share to #{@build_path}/vendor/mono/"
+  puts "Correcting the build prefix from /usr/local to #{@build_path}/vendor/mono/"
   Dir.glob("#{@cache_path}/vendor/mono/**/*", File::FNM_DOTMATCH) do |f|
     begin
       file = File.stat(f)
@@ -55,21 +60,26 @@ end
 
 if fetch_mono
   if unpack_mono
-    if correct_prefix
-      if prepare_mono
-        if compile
-          puts 'Successfully compied application. Preparing for deployment...'
-          exit 0
+    if strip_scm
+      if correct_prefix
+        if prepare_mono
+          if compile
+            puts 'Successfully compied application. Preparing for deployment...'
+            exit 0
+          else
+            puts 'Failed to compile application...'
+            exit 1
+          end
         else
-          puts 'Failed to compile application...'
+          puts 'Failed to prepare mono...'
           exit 1
         end
       else
-        puts 'Failed to prepare mono...'
+        puts 'Failed to correct the build prefix...'
         exit 1
       end
     else
-      puts 'Failed to correct the build prefix...'
+      puts 'Failed to strip scm'
       exit 1
     end
   else
