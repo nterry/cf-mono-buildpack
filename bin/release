@@ -1,8 +1,10 @@
 #!/usr/bin/env ruby
 
-require 'yaml'
+puts '************************************************************'
+puts '**                                                        **'
+puts '**                 Release script called                  **'
+puts '**                                                        **'
+puts '************************************************************'
 
-{
-  "config_vars" => {},
-  "default_process_types" => { "web" => "vendor/mono/bin/mono-sgen CrowbarDaemon/bin/Release/CrowbarDaemon.exe --port=$PORT" }
-}.to_yaml
+puts "Build Path = #{ARGV[0]}"
+
